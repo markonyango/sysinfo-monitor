@@ -1,0 +1,84 @@
+<div class="wrapper">
+  <div class="header">
+    <mat-card style="flex: 1">
+      <mat-card-header>
+        <div mat-card-avatar><mat-icon>memory</mat-icon></div>
+        <mat-card-subtitle>CPU Usage</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="cpu_usage">
+        <ng-container *ngFor="let cpu of cpu_usage(); let i = index">
+          <div>
+            <!-- <label [for]="'core'+i">{{ i }}</label> -->
+            <progress [id]="'core'+i" [max]="100" [value]="cpu.usage"></progress>
+          </div>
+        </ng-container>
+      </mat-card-content>
+    </mat-card>
+    <mat-card flex="1">
+      <mat-card-header>
+        <div mat-card-avatar><mat-icon>memory_alt</mat-icon></div>
+        <mat-card-subtitle>Memory</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <stats-panel>
+        <stats-item [label]="'Total'" value="{{ memory_usage().total | bytes }}" />
+        <stats-item [label]="'Used'" value="{{ memory_usage().used | bytes }} ({{ memory_usage().usage }})" />
+        <stats-item [label]="'Free'" value="{{ memory_usage().free | bytes }}" />
+        <stats-item [label]="'Cached'" value="{{ memory_usage().cached | bytes }}" />
+        </stats-panel>
+      </mat-card-content>
+    </mat-card>
+    <mat-card style="flex: 0.7">
+      <mat-card-header>
+        <div mat-card-avatar><mat-icon>computer</mat-icon></div>
+        <mat-card-subtitle>System</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <stats-panel>
+        <stats-item [label]="'Uptime'" [value]="uptime()" />
+        </stats-panel>
+      </mat-card-content>
+    </mat-card>
+    <mat-card style="flex: 0.8">
+      <mat-card-header>
+        <div mat-card-avatar><mat-icon>storage</mat-icon></div>
+        <mat-card-subtitle>Storage</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <stats-panel>
+          <stats-item [label]="'Total'" value="{{ disk_global_stats().total | bytes }}" />
+          <stats-item [label]="'Used'" value="{{ disk_global_stats().used | bytes }}" />
+          <stats-item [label]="'Free'" value="{{ disk_global_stats().free | bytes }}" />
+        </stats-panel>
+      </mat-card-content>
+    </mat-card>
+    <mat-card style="flex: 0.8">
+      <mat-card-header>
+        <div mat-card-avatar><mat-icon>lan</mat-icon></div>
+        <mat-card-subtitle>Network</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <stats-panel>
+          <stats-item [label]="'&darr; Receiving'" value="{{ network_global_stats().receiving | bytes }}" />
+          <stats-item [label]="'&uarr; Transmitting'" value="{{ network_global_stats().transmitting | bytes }}" />
+        </stats-panel>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="processes"></div>
+  <div class="status_bar"></div>
+</div>
+<mat-tab-group>
+  <mat-tab [label]="'Processes'">
+    <ng-template matTabContent><process-list [data]="processes()"/></ng-template>
+  </mat-tab>
+  <mat-tab [label]="'Disks'">
+    <ng-template matTabContent><disk-list [data]="disk_usage()"/></ng-template>
+  </mat-tab>
+  <mat-tab [label]="'Network Interfaces'">
+    <ng-template matTabContent><network-interface-list [data]="network_interfaces()"/></ng-template>
+  </mat-tab>
+  <mat-tab [label]="'Docker'">
+    <ng-template matTabContent><docker-stats [data]="docker_stats()" /></ng-template>
+  </mat-tab>
+</mat-tab-group>

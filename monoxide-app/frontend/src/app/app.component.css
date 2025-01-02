@@ -1,0 +1,44 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    width: 100%;
+  }
+
+  .network_interfaces {
+    display: flex;
+    gap: 1em;
+
+    .mat-card-subtitle {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mat-card-content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .cpu_usage {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.3rem 1rem;
+    align-items: center;
+    font-size: 0.8rem;
+
+    label {
+      padding-right: 10px;
+    }
+  }
+}

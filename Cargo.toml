@@ -1,2 +1,3 @@
 [workspace]
-members = ["monoxide-backend", "monoxide-cli"]
+resolver = "2"
+members = [ "monoxide-app","monoxide-backend", "monoxide-cli"]

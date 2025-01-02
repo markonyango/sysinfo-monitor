@@ -1,0 +1,7 @@
+/* Core Data Grid CSS */
+@import 'ag-grid-community/styles/ag-grid.css';
+/* Quartz Theme Specific CSS */
+@import 'ag-grid-community/styles/ag-theme-material.css';
+
+html, body { height: 100%; background-color: white; }
+body { padding: 1em; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; overflow: hidden; user-select: none }

@@ -7,6 +7,7 @@ pub struct DiskStats(pub Vec<Disk>);
 #[derive(Debug, Default, Serialize)]
 pub struct Disk {
     pub name: String,
+    pub disk_type: String,
     pub file_system: String,
     pub mount_point: String,
     pub total_space: u64,
@@ -23,6 +24,7 @@ impl From<&sysinfo::Disk> for Disk {
     fn from(value: &sysinfo::Disk) -> Self {
         Disk {
             name: value.name().to_string_lossy().to_string(),
+            disk_type: value.kind().to_string(),
             file_system: value.file_system().to_string_lossy().to_string(),
             mount_point: value.mount_point().to_string_lossy().to_string(),
             total_space: value.total_space(),

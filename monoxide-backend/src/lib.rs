@@ -3,6 +3,7 @@ use std::future::Future;
 extern crate sysinfo;
 
 pub mod disk;
+#[cfg(feature = "docker")]
 pub mod docker;
 pub mod network;
 pub mod process;

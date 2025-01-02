@@ -13,3 +13,8 @@
 /target
 **/*.rs.bk
 Cargo.lock
+
+# Angular
+.angular
+dist
+node_modules

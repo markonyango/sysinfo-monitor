@@ -1,15 +1,2 @@
-[package]
-name = "sysinfo-monitor"
-authors = ["Mark Onyango"]
-license = "MIT"
-version = "0.1.0"
-repository = "https://github.com/markonyango/sysinfo-monitor"
-keywords = ["system-information", "disk", "process", "network", "cpu"]
-edition = "2021"
-readme = "README"
-
-[dependencies]
-sysinfo = "0.33.1"
-serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }
-bollard = "0.18.1"
+[workspace]
+members = ["monoxide-backend", "monoxide-cli"]

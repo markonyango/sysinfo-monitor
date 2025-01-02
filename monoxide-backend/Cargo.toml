@@ -1,0 +1,15 @@
+[package]
+name = "monoxide-backend"
+authors = ["Mark Onyango"]
+license = "MIT"
+version = "0.1.0"
+repository = "https://github.com/markonyango/monoxide"
+keywords = ["monitoring", "disk", "process", "network", "cpu", "docker"]
+edition = "2021"
+readme = "README"
+
+[dependencies]
+sysinfo = "0.33.1"
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+bollard = "0.18.1"

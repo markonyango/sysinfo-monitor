@@ -1,0 +1,13 @@
+[package]
+name = "monoxide-cli"
+authors = ["Mark Onyango"]
+license = "MIT"
+version = "0.1.0"
+repository = "https://github.com/markonyango/monoxide"
+keywords = ["monitoring", "disk", "process", "network", "cpu", "docker"]
+edition = "2021"
+readme = "README"
+
+[dependencies]
+tokio = { version = "*", features = ["full"] }
+monoxide-backend ={ path = "../monoxide-backend" }

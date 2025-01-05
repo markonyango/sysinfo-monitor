@@ -12,7 +12,10 @@ readme = "README"
 sysinfo = "0.33.1"
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-bollard = "0.18.1"
+bollard = { version = "0.18.1", optional = true }
+battery = { version = "0.7.8", optional = true }
 
 [features]
-docker = []
+default = ["docker", "battery"]
+docker = ["dep:bollard"]
+battery = ["dep:battery"]

@@ -1,10 +1,10 @@
-use monoxide_backend::{docker::DockerMonitor, CollectAsyncStats};
+use monoxide_backend::battery::BatteryMonitor;
+use monoxide_backend::CollectStats;
 
 #[tokio::main]
 async fn main() {
-    let mut monitor = DockerMonitor::new();
-    let _ = monitor.collect_stats().await.and_then(|val| {
-        println!("{:#?}", val);
-        Ok(val)
-    });
+    let mut monitor = BatteryMonitor::new();
+    let stats = monitor.collect_stats();
+
+    println!("{:?}", stats);
 }

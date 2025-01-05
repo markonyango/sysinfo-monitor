@@ -10,4 +10,4 @@ readme = "README"
 
 [dependencies]
 tokio = { version = "*", features = ["full"] }
-monoxide-backend ={ path = "../monoxide-backend" }
+monoxide-backend ={ path = "../monoxide-backend", features = ["battery"] }

@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use monoxide_backend::{
+    battery::BatteryStats,
     disk::{DiskMonitor, DiskStats},
     docker::{DockerMonitor, DockerStats},
     network::{NetworkMonitor, NetworkStats},
@@ -16,6 +17,7 @@ pub type Results = HashMap<String, MonitorStats>;
 #[derive(Debug, Serialize)]
 #[serde(untagged)]
 pub enum MonitorStats {
+    Battery(BatteryStats),
     Disk(DiskStats),
     Docker(DockerStats),
     Network(NetworkStats),
@@ -107,6 +109,7 @@ impl AppState {
 impl From<MonitorData> for MonitorStats {
     fn from(value: MonitorData) -> Self {
         match value {
+            MonitorData::Battery(battery_stats) => Self::Battery(battery_stats),
             MonitorData::Disk(disk_stats) => Self::Disk(disk_stats),
             MonitorData::Docker(docker_stats) => Self::Docker(docker_stats),
             MonitorData::Network(network_stats) => Self::Network(network_stats),

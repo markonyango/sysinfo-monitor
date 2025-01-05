@@ -2,6 +2,8 @@ use std::future::Future;
 
 extern crate sysinfo;
 
+#[cfg(feature = "battery")]
+pub mod battery;
 pub mod disk;
 #[cfg(feature = "docker")]
 pub mod docker;
@@ -12,6 +14,8 @@ pub mod system;
 #[derive(Debug, serde::Serialize)]
 #[serde(untagged)]
 pub enum MonitorData {
+    #[cfg(feature = "battery")]
+    Battery(battery::BatteryStats),
     Disk(disk::DiskStats),
     #[cfg(feature = "docker")]
     Docker(docker::DockerStats),

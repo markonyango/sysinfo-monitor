@@ -1,4 +1,6 @@
 extern crate serde;
+use crate::MonitorData;
+
 use self::serde::Serialize;
 
 #[derive(Debug, Serialize)]
@@ -36,5 +38,11 @@ impl From<&sysinfo::Disk> for Disk {
             total_written_bytes: value.usage().total_written_bytes,
             total_read_bytes: value.usage().total_read_bytes,
         }
+    }
+}
+
+impl From<DiskStats> for MonitorData {
+    fn from(value: DiskStats) -> Self {
+        MonitorData::Disk(value)
     }
 }

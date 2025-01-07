@@ -1,5 +1,7 @@
 extern crate serde;
 
+use crate::MonitorData;
+
 use self::serde::Serialize;
 
 #[derive(Debug, Default, Serialize)]
@@ -23,3 +25,9 @@ pub struct Process {
 
 #[derive(Debug, Default, Serialize)]
 pub struct ProcessStats(pub Vec<Process>);
+
+impl From<ProcessStats> for MonitorData {
+    fn from(value: ProcessStats) -> Self {
+        MonitorData::Process(value)
+    }
+}

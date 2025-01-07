@@ -1,4 +1,4 @@
-use crate::CollectStats;
+use crate::{CollectStats, MonitorData};
 use sysinfo::{ProcessRefreshKind, System};
 
 use super::{stats::Process, ProcessStats};
@@ -15,9 +15,7 @@ impl ProcessMonitor {
 }
 
 impl CollectStats for ProcessMonitor {
-    type StatsType = ProcessStats;
-
-    fn collect_stats(&mut self) -> Self::StatsType {
+    fn collect_stats(&mut self) -> MonitorData {
         let process_refresh_kind = ProcessRefreshKind::nothing()
             .with_memory()
             .with_cmd(sysinfo::UpdateKind::OnlyIfNotSet)
@@ -67,5 +65,6 @@ impl CollectStats for ProcessMonitor {
                 })
                 .collect(),
         )
+        .into()
     }
 }

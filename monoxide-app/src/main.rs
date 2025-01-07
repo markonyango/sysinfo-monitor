@@ -2,10 +2,7 @@
 
 mod state;
 
-use monoxide_backend::{
-    disk::DiskStats, docker::DockerStats, network::NetworkStats, process::ProcessStats,
-    system::SystemStats,
-};
+use monoxide_backend::{docker::DockerStats, MonitorData};
 use state::{AppState, Results};
 use tauri::State;
 
@@ -40,20 +37,20 @@ async fn update_all(state: State<'_, AppState>) -> Result<Results, String> {
 }
 
 #[tauri::command]
-async fn update_disks(state: State<'_, AppState>) -> Result<DiskStats, String> {
-    state.update_disks().await
+async fn update_disks(state: State<'_, AppState>) -> Result<MonitorData, String> {
+    Ok(state.update_disks().await)
 }
 #[tauri::command]
-async fn update_network(state: State<'_, AppState>) -> Result<NetworkStats, String> {
-    state.update_network().await
+async fn update_network(state: State<'_, AppState>) -> Result<MonitorData, String> {
+    Ok(state.update_network().await)
 }
 #[tauri::command]
-async fn update_system(state: State<'_, AppState>) -> Result<SystemStats, String> {
-    state.update_system().await
+async fn update_system(state: State<'_, AppState>) -> Result<MonitorData, String> {
+    Ok(state.update_system().await)
 }
 #[tauri::command]
-async fn update_processes(state: State<'_, AppState>) -> Result<ProcessStats, String> {
-    state.update_processes().await
+async fn update_processes(state: State<'_, AppState>) -> Result<MonitorData, String> {
+    Ok(state.update_processes().await)
 }
 
 #[tauri::command]

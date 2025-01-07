@@ -1,6 +1,6 @@
 use sysinfo::Disks;
 
-use crate::CollectStats;
+use crate::{CollectStats, MonitorData};
 
 use super::DiskStats;
 
@@ -16,11 +16,9 @@ impl DiskMonitor {
 }
 
 impl CollectStats for DiskMonitor {
-    type StatsType = DiskStats;
-
-    fn collect_stats(&mut self) -> Self::StatsType {
+    fn collect_stats(&mut self) -> MonitorData {
         self.monitor.refresh(true);
 
-        DiskStats(self.monitor.list().iter().map(Into::into).collect())
+        DiskStats(self.monitor.list().iter().map(Into::into).collect()).into()
     }
 }

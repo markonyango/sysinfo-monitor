@@ -1,5 +1,7 @@
 extern crate serde;
 
+use crate::MonitorData;
+
 use self::serde::Serialize;
 
 #[derive(Debug, Default, Serialize)]
@@ -42,5 +44,11 @@ impl From<&sysinfo::Cpu> for Cpu {
             brand: value.brand().to_string(),
             frequency: value.frequency(),
         }
+    }
+}
+
+impl From<SystemStats> for MonitorData {
+    fn from(value: SystemStats) -> Self {
+        MonitorData::System(value)
     }
 }

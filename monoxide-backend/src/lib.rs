@@ -9,10 +9,19 @@ pub mod network;
 pub mod process;
 pub mod system;
 
-pub trait CollectStats {
-    type StatsType;
+#[derive(Debug, serde::Serialize)]
+#[serde(untagged)]
+pub enum MonitorData {
+    Disk(disk::DiskStats),
+    #[cfg(feature = "docker")]
+    Docker(docker::DockerStats),
+    Network(network::NetworkStats),
+    Process(process::ProcessStats),
+    System(system::SystemStats),
+}
 
-    fn collect_stats(&mut self) -> Self::StatsType;
+pub trait CollectStats {
+    fn collect_stats(&mut self) -> MonitorData;
 }
 
 pub trait CollectAsyncStats {

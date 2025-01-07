@@ -1,4 +1,4 @@
-use crate::CollectStats;
+use crate::{CollectStats, MonitorData};
 use sysinfo::System;
 
 use super::stats::SystemStats;
@@ -15,9 +15,7 @@ impl SystemMonitor {
 }
 
 impl CollectStats for SystemMonitor {
-    type StatsType = SystemStats;
-
-    fn collect_stats(&mut self) -> Self::StatsType {
+    fn collect_stats(&mut self) -> MonitorData {
         self.monitor.refresh_all();
 
         SystemStats {
@@ -40,5 +38,6 @@ impl CollectStats for SystemMonitor {
             cpu_arch: System::cpu_arch(),
             physical_core_count: self.monitor.physical_core_count(),
         }
+        .into()
     }
 }

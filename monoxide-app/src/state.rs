@@ -6,7 +6,7 @@ use monoxide_backend::{
     network::{NetworkMonitor, NetworkStats},
     process::{ProcessMonitor, ProcessStats},
     system::{SystemMonitor, SystemStats},
-    CollectAsyncStats, CollectStats,
+    CollectAsyncStats, CollectStats, MonitorData,
 };
 use serde::Serialize;
 use tauri::async_runtime::Mutex;
@@ -48,20 +48,20 @@ impl AppState {
 
         map.insert(
             "disk".into(),
-            MonitorStats::Disk(self.disk_monitor.lock().await.collect_stats()),
+            self.disk_monitor.lock().await.collect_stats().into(),
         );
 
         map.insert(
             "network".into(),
-            MonitorStats::Network(self.network_monitor.lock().await.collect_stats()),
+            self.network_monitor.lock().await.collect_stats().into(),
         );
         map.insert(
             "system".into(),
-            MonitorStats::System(self.system_monitor.lock().await.collect_stats()),
+            self.system_monitor.lock().await.collect_stats().into(),
         );
         map.insert(
             "process".into(),
-            MonitorStats::Process(self.process_monitor.lock().await.collect_stats()),
+            self.process_monitor.lock().await.collect_stats().into(),
         );
         map.insert(
             "docker".into(),
@@ -78,28 +78,40 @@ impl AppState {
         Ok(map)
     }
 
-    pub async fn update_disks(&self) -> Result<DiskStats, String> {
+    pub async fn update_disks(&self) -> MonitorData {
         let mut monitor = self.disk_monitor.lock().await;
-        Ok(monitor.collect_stats())
+        monitor.collect_stats()
     }
 
-    pub async fn update_network(&self) -> Result<NetworkStats, String> {
+    pub async fn update_network(&self) -> MonitorData {
         let mut monitor = self.network_monitor.lock().await;
-        Ok(monitor.collect_stats())
+        monitor.collect_stats()
     }
 
-    pub async fn update_system(&self) -> Result<SystemStats, String> {
+    pub async fn update_system(&self) -> MonitorData {
         let mut monitor = self.system_monitor.lock().await;
-        Ok(monitor.collect_stats())
+        monitor.collect_stats()
     }
 
-    pub async fn update_processes(&self) -> Result<ProcessStats, String> {
+    pub async fn update_processes(&self) -> MonitorData {
         let mut monitor = self.process_monitor.lock().await;
-        Ok(monitor.collect_stats())
+        monitor.collect_stats()
     }
 
     pub async fn update_docker_stats(&self) -> Result<DockerStats, String> {
         let mut monitor = self.docker_monitor.lock().await;
         Ok(monitor.collect_stats().await.unwrap())
+    }
+}
+
+impl From<MonitorData> for MonitorStats {
+    fn from(value: MonitorData) -> Self {
+        match value {
+            MonitorData::Disk(disk_stats) => Self::Disk(disk_stats),
+            MonitorData::Docker(docker_stats) => Self::Docker(docker_stats),
+            MonitorData::Network(network_stats) => Self::Network(network_stats),
+            MonitorData::Process(process_stats) => Self::Process(process_stats),
+            MonitorData::System(system_stats) => Self::System(system_stats),
+        }
     }
 }

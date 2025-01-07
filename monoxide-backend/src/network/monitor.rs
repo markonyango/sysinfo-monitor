@@ -1,4 +1,4 @@
-use crate::CollectStats;
+use crate::{CollectStats, MonitorData};
 use sysinfo::Networks;
 
 use super::{stats::NetworkInterface, NetworkStats};
@@ -15,9 +15,7 @@ impl NetworkMonitor {
 }
 
 impl CollectStats for NetworkMonitor {
-    type StatsType = NetworkStats;
-
-    fn collect_stats(&mut self) -> Self::StatsType {
+    fn collect_stats(&mut self) -> MonitorData {
         self.monitor.refresh(true);
 
         NetworkStats(
@@ -34,5 +32,6 @@ impl CollectStats for NetworkMonitor {
                 })
                 .collect(),
         )
+        .into()
     }
 }

@@ -20,12 +20,10 @@ pub enum MonitorData {
     System(system::SystemStats),
 }
 
-pub trait CollectStats {
+pub trait CollectStats: Send {
     fn collect_stats(&mut self) -> MonitorData;
 }
 
 pub trait CollectAsyncStats {
-    type StatsType;
-
-    fn collect_stats(&mut self) -> impl Future<Output = Result<Self::StatsType, String>>;
+    fn collect_stats(&mut self) -> impl Future<Output = MonitorData>;
 }

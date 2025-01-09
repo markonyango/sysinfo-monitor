@@ -1,45 +1,44 @@
 use bollard::{container::ListContainersOptions, image::ListImagesOptions, Docker};
 
-use crate::CollectAsyncStats;
+use crate::{CollectAsyncStats, MonitorData};
 
 use super::DockerStats;
 
 #[derive(Debug)]
 pub struct DockerMonitor {
-    pub monitor: Docker,
+    pub monitor: Option<Docker>,
 }
 
 impl DockerMonitor {
     pub fn new() -> Self {
         Self {
-            monitor: Docker::connect_with_local_defaults().unwrap(),
+            monitor: Docker::connect_with_local_defaults().ok(),
         }
     }
 }
 
 impl CollectAsyncStats for DockerMonitor {
-    type StatsType = DockerStats;
-
-    async fn collect_stats(&mut self) -> Result<DockerStats, String> {
+    async fn collect_stats(&mut self) -> MonitorData {
         let list_image_options = Some(ListImagesOptions::<String> {
             all: true,
             ..Default::default()
         });
-        let images = self
-            .monitor
-            .list_images(list_image_options)
-            .await
-            .or_else(|_| Err("could not list docker images".to_string()))?;
 
-        let containers = self
-            .monitor
-            .list_containers(Some(ListContainersOptions::<String> {
-                all: true,
-                ..Default::default()
-            }))
-            .await
-            .or_else(|_| Err("could not list docker containers".to_string()))?;
+        let list_container_options = Some(ListContainersOptions::<String> {
+            all: true,
+            ..Default::default()
+        });
 
-        Ok(DockerStats { images, containers })
+        if let Some(monitor) = &self.monitor {
+            let images = monitor.list_images(list_image_options).await.ok();
+            let containers = monitor.list_containers(list_container_options).await.ok();
+
+            return MonitorData::Docker(DockerStats { images, containers });
+        }
+
+        MonitorData::Docker(DockerStats {
+            images: None,
+            containers: None,
+        })
     }
 }

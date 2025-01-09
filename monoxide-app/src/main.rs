@@ -4,7 +4,7 @@ mod state;
 
 use monoxide_backend::{docker::DockerStats, MonitorData};
 use state::{AppState, Results};
-use tauri::State;
+use tauri::{async_runtime::Mutex, State};
 
 /// Main entry point for the application
 ///
@@ -18,7 +18,7 @@ fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_os::init())
-        .manage(AppState::new())
+        .manage(Mutex::new(AppState::new()))
         .invoke_handler(tauri::generate_handler![
             update_all,
             update_disks,
@@ -32,28 +32,28 @@ fn main() {
 }
 
 #[tauri::command]
-async fn update_all(state: State<'_, AppState>) -> Result<Results, String> {
-    state.update_all().await
+async fn update_all(state: State<'_, Mutex<AppState>>) -> Result<Results, String> {
+    state.lock().await.update_all().await
 }
 
 #[tauri::command]
-async fn update_disks(state: State<'_, AppState>) -> Result<MonitorData, String> {
-    Ok(state.update_disks().await)
+async fn update_disks(state: State<'_, Mutex<AppState>>) -> Result<MonitorData, String> {
+    Ok(state.lock().await.update_disks())
 }
 #[tauri::command]
-async fn update_network(state: State<'_, AppState>) -> Result<MonitorData, String> {
-    Ok(state.update_network().await)
+async fn update_network(state: State<'_, Mutex<AppState>>) -> Result<MonitorData, String> {
+    Ok(state.lock().await.update_network())
 }
 #[tauri::command]
-async fn update_system(state: State<'_, AppState>) -> Result<MonitorData, String> {
-    Ok(state.update_system().await)
+async fn update_system(state: State<'_, Mutex<AppState>>) -> Result<MonitorData, String> {
+    Ok(state.lock().await.update_system())
 }
 #[tauri::command]
-async fn update_processes(state: State<'_, AppState>) -> Result<MonitorData, String> {
-    Ok(state.update_processes().await)
+async fn update_processes(state: State<'_, Mutex<AppState>>) -> Result<MonitorData, String> {
+    Ok(state.lock().await.update_processes())
 }
 
 #[tauri::command]
-async fn update_docker_stats(state: State<'_, AppState>) -> Result<DockerStats, String> {
-    state.update_docker_stats().await
+async fn update_docker_stats(state: State<'_, Mutex<AppState>>) -> Result<MonitorData, String> {
+    Ok(state.lock().await.update_docker_stats().await)
 }

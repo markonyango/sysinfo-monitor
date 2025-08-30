@@ -1,4 +1,5 @@
 use crate::{CollectStats, Monitor, MonitorData};
+use async_trait::async_trait;
 use sysinfo::{ProcessRefreshKind, System};
 
 use super::{stats::Process, ProcessStats};
@@ -73,8 +74,9 @@ impl CollectStats for ProcessMonitor {
     }
 }
 
+#[async_trait]
 impl Monitor for ProcessMonitor {
-    fn report(&mut self) -> serde_json::Value {
+    async fn report(&mut self) -> serde_json::Value {
         let process_refresh_kind = ProcessRefreshKind::nothing()
             .with_memory()
             .with_cmd(sysinfo::UpdateKind::OnlyIfNotSet)

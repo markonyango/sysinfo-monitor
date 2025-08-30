@@ -1,4 +1,5 @@
 use crate::{CollectStats, Monitor, MonitorData};
+use async_trait::async_trait;
 use sysinfo::Networks;
 
 use super::{stats::NetworkInterface, NetworkStats};
@@ -36,8 +37,9 @@ impl CollectStats for NetworkMonitor {
     }
 }
 
+#[async_trait]
 impl Monitor for NetworkMonitor {
-    fn report(&mut self) -> serde_json::Value {
+    async fn report(&mut self) -> serde_json::Value {
         self.monitor.refresh(true);
 
         let info = NetworkStats(

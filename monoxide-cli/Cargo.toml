@@ -10,4 +10,6 @@ readme = "README"
 
 [dependencies]
 tokio = { version = "*", features = ["full"] }
+serde_json = "*"
 monoxide-backend ={ path = "../monoxide-backend" }
+async-trait = "0.1.89"

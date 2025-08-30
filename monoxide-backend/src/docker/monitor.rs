@@ -1,50 +1,40 @@
-use bollard::{container::ListContainersOptions, image::ListImagesOptions, Docker};
+use async_trait::async_trait;
+use bollard::image::ListImagesOptions;
+use bollard::{container::ListContainersOptions, errors::Error, Docker};
 
-use crate::{CollectAsyncStats, Monitor, MonitorData};
-
-use super::DockerStats;
+use crate::docker::DockerStats;
+use crate::Monitor;
 
 #[derive(Debug)]
 pub struct DockerMonitor {
-    pub monitor: Option<Docker>,
+    pub monitor: Docker,
 }
 
 impl DockerMonitor {
-    pub fn new() -> Self {
-        Self {
-            monitor: Docker::connect_with_local_defaults().ok(),
-        }
+    pub fn new() -> Result<Self, Error> {
+        let monitor = Docker::connect_with_local_defaults()?;
+        Ok(Self { monitor })
     }
 }
 
-impl CollectAsyncStats for DockerMonitor {
-    async fn collect_stats(&mut self) -> MonitorData {
-        let list_image_options = Some(ListImagesOptions::<String> {
-            all: true,
-            ..Default::default()
-        });
-
-        let list_container_options = Some(ListContainersOptions::<String> {
-            all: true,
-            ..Default::default()
-        });
-
-        if let Some(monitor) = &self.monitor {
-            let images = monitor.list_images(list_image_options).await.ok();
-            let containers = monitor.list_containers(list_container_options).await.ok();
-
-            return MonitorData::Docker(DockerStats { images, containers });
-        }
-
-        MonitorData::Docker(DockerStats {
-            images: None,
-            containers: None,
-        })
-    }
-}
-
+#[async_trait]
 impl Monitor for DockerMonitor {
-    fn report(&mut self) -> serde_json::Value {
-        todo!()
+    async fn report(&mut self) -> serde_json::Value {
+        let image_options = ListImagesOptions::<String> {
+            all: true,
+            ..Default::default()
+        };
+
+        let container_options = ListContainersOptions::<String> {
+            all: true,
+            ..Default::default()
+        };
+
+        let images = self.monitor.list_images(Some(image_options)).await.unwrap();
+        let containers = self.monitor.list_containers(Some(container_options)).await.unwrap();
+        let docker_stats = DockerStats { images, containers };
+
+
+        serde_json::Value::try_from(docker_stats).unwrap()
     }
 }

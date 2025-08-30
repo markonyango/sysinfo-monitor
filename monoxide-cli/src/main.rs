@@ -1,14 +1,15 @@
+use async_trait::async_trait;
 use monoxide_backend::{disk::DiskMonitor, process::ProcessMonitor, Monitor, MonitorRegistry};
 
 #[tokio::main]
 async fn main() {
     let mut registry = MonitorRegistry::new();
 
-    registry.register(ProcessMonitor::new());
-    registry.register(DiskMonitor::new());
-    registry.register(CustomMonitor::new());
+    registry.register(ProcessMonitor::new(), "processes");
+    registry.register(DiskMonitor::new(), "disks");
+    registry.register(CustomMonitor::new(), "custom");
 
-    let reports = registry.run();
+    let reports = registry.run().await;
 
     println!("{}", reports.to_string());
 
@@ -20,8 +21,10 @@ impl CustomMonitor {
         Self
     }
 }
+
+#[async_trait]
 impl Monitor for CustomMonitor {
-    fn report(&mut self) -> serde_json::Value {
+    async fn report(&mut self) -> serde_json::Value {
         "Report from CustomMonitor".into()
     }
 }

@@ -1,4 +1,5 @@
 use crate::{CollectStats, Monitor, MonitorData};
+use async_trait::async_trait;
 use sysinfo::System;
 
 use super::stats::SystemStats;
@@ -42,8 +43,9 @@ impl CollectStats for SystemMonitor {
     }
 }
 
+#[async_trait]
 impl Monitor for SystemMonitor {
-    fn report(&mut self) -> serde_json::Value {
+    async fn report(&mut self) -> serde_json::Value {
         self.monitor.refresh_all();
 
         let info = SystemStats {

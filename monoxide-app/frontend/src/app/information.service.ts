@@ -36,7 +36,7 @@ export class InformationService {
   private tauriService = inject(TauriService);
 
   private data = toSignal(
-    interval(1000).pipe(
+    interval(1500).pipe(
       concatMap(() => this.tauriService.invoke<Information>('update_all')),
     ),
     { initialValue: initialState },
@@ -48,7 +48,7 @@ export class InformationService {
 
   public cpu_usage = computed(() => this.sysinfo()?.cpus);
 
-  public network_interfaces = computed(() => this.data().network);
+  public network_interfaces = computed(() => this.data().network ?? []);
 
   public network_global_stats = computed(() => ({
     receiving: this.network_interfaces()
@@ -59,7 +59,7 @@ export class InformationService {
       .reduce((a, b) => a + b, 0),
   }));
 
-  public disk_usage = computed<DiskInformation[]>(() => this.data().disk);
+  public disk_usage = computed<DiskInformation[]>(() => this.data().disk ?? []);
 
   public disk_global_stats = computed(() => ({
     total: this.disk_usage()

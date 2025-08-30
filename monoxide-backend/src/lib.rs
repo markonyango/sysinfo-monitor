@@ -27,3 +27,32 @@ pub trait CollectStats: Send {
 pub trait CollectAsyncStats {
     fn collect_stats(&mut self) -> impl Future<Output = MonitorData>;
 }
+
+pub trait Monitor {
+    fn report(&mut self) -> serde_json::Value;
+}
+
+pub struct MonitorRegistry {
+    monitors: Vec<Box<dyn Monitor + 'static>>,
+}
+impl MonitorRegistry {
+    pub fn new() -> Self {
+        Self {
+            monitors: Vec::new(),
+        }
+    }
+
+    pub fn register<M: Monitor + 'static>(&mut self, monitor: M) {
+        self.monitors.push(Box::new(monitor));
+    }
+
+    pub fn run(&mut self) -> serde_json::Value {
+        let rs = self
+            .monitors
+            .iter_mut()
+            .map(|monitor| monitor.report())
+            .collect::<Vec<_>>();
+
+        serde_json::to_value(rs).unwrap_or_default()
+    }
+}

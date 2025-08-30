@@ -1,6 +1,6 @@
 use bollard::{container::ListContainersOptions, image::ListImagesOptions, Docker};
 
-use crate::{CollectAsyncStats, MonitorData};
+use crate::{CollectAsyncStats, Monitor, MonitorData};
 
 use super::DockerStats;
 
@@ -40,5 +40,11 @@ impl CollectAsyncStats for DockerMonitor {
             images: None,
             containers: None,
         })
+    }
+}
+
+impl Monitor for DockerMonitor {
+    fn report(&mut self) -> serde_json::Value {
+        todo!()
     }
 }

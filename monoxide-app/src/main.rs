@@ -2,7 +2,7 @@
 
 mod state;
 
-use monoxide_backend::{docker::DockerStats, MonitorData};
+use monoxide_backend::MonitorData;
 use state::{AppState, Results};
 use tauri::{async_runtime::Mutex, State};
 

@@ -1,6 +1,6 @@
 use sysinfo::Disks;
 
-use crate::{CollectStats, MonitorData};
+use crate::{CollectStats, Monitor, MonitorData};
 
 use super::DiskStats;
 
@@ -20,5 +20,15 @@ impl CollectStats for DiskMonitor {
         self.monitor.refresh(true);
 
         DiskStats(self.monitor.list().iter().map(Into::into).collect()).into()
+    }
+}
+
+impl Monitor for DiskMonitor {
+    fn report(&mut self) -> serde_json::Value {
+        self.monitor.refresh(true);
+
+        let info = DiskStats(self.monitor.list().iter().map(Into::into).collect());
+
+        serde_json::to_value(info).unwrap_or_default()
     }
 }

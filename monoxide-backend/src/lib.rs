@@ -1,4 +1,4 @@
-use std::{collections::HashMap, future::Future};
+use std::collections::HashMap;
 
 use async_trait::async_trait;
 use serde_json::Value;
@@ -10,24 +10,6 @@ pub mod docker;
 pub mod network;
 pub mod process;
 pub mod system;
-
-#[derive(Debug, serde::Serialize)]
-#[serde(untagged)]
-pub enum MonitorData {
-    Disk(disk::DiskStats),
-    Docker(docker::DockerStats),
-    Network(network::NetworkStats),
-    Process(process::ProcessStats),
-    System(system::SystemStats),
-}
-
-pub trait CollectStats: Send {
-    fn collect_stats(&mut self) -> MonitorData;
-}
-
-pub trait CollectAsyncStats {
-    fn collect_stats(&mut self) -> impl Future<Output = MonitorData>;
-}
 
 #[async_trait]
 pub trait Monitor {

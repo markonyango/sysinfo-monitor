@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use sysinfo::Disks;
 
-use crate::{CollectStats, Monitor, MonitorData};
+use crate::Monitor;
 
 use super::DiskStats;
 
@@ -16,17 +16,9 @@ impl DiskMonitor {
     }
 }
 
-impl CollectStats for DiskMonitor {
-    fn collect_stats(&mut self) -> MonitorData {
-        self.monitor.refresh(true);
-
-        DiskStats(self.monitor.list().iter().map(Into::into).collect()).into()
-    }
-}
-
 #[async_trait]
 impl Monitor for DiskMonitor {
-    async fn report(& mut self) -> serde_json::Value {
+    async fn report(&mut self) -> serde_json::Value {
         self.monitor.refresh(true);
 
         let info = DiskStats(self.monitor.list().iter().map(Into::into).collect());

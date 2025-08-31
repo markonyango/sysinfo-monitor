@@ -1,7 +1,5 @@
 extern crate serde;
 
-use crate::MonitorData;
-
 use self::serde::Serialize;
 
 #[derive(Debug, Default, Serialize)]
@@ -65,11 +63,5 @@ impl From<&sysinfo::NetworkData> for NetworkInterface {
                 .collect(),
             mtu: value.mtu(),
         }
-    }
-}
-
-impl From<NetworkStats> for MonitorData {
-    fn from(value: NetworkStats) -> Self {
-        MonitorData::Network(value)
     }
 }

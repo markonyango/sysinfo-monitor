@@ -1,6 +1,6 @@
 extern crate serde;
 
-use crate::MonitorData;
+use serde::Deserialize;
 
 use self::serde::Serialize;
 
@@ -16,6 +16,7 @@ pub struct Process {
     pub memory: u64,
     pub virtual_memory: u64,
     pub cpu_usage: f32,
+    pub disk_usage: DiskUsage,
     pub status: String,
     pub cwd: Option<String>,
     pub root: Option<String>,
@@ -26,8 +27,21 @@ pub struct Process {
 #[derive(Debug, Default, Serialize)]
 pub struct ProcessStats(pub Vec<Process>);
 
-impl From<ProcessStats> for MonitorData {
-    fn from(value: ProcessStats) -> Self {
-        MonitorData::Process(value)
+#[derive(Debug, Default, Serialize, Deserialize)]
+pub struct DiskUsage {
+    pub total_written: u64,
+    pub written: u64,
+    pub total_read: u64,
+    pub read: u64,
+}
+
+impl From<sysinfo::DiskUsage> for DiskUsage {
+    fn from(value: sysinfo::DiskUsage) -> Self {
+        Self {
+            total_written: value.total_written_bytes,
+            written: value.written_bytes,
+            total_read: value.total_read_bytes,
+            read: value.read_bytes,
+        }
     }
 }

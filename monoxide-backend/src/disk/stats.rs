@@ -1,5 +1,4 @@
 extern crate serde;
-use crate::MonitorData;
 
 use self::serde::Serialize;
 
@@ -41,8 +40,3 @@ impl From<&sysinfo::Disk> for Disk {
     }
 }
 
-impl From<DiskStats> for MonitorData {
-    fn from(value: DiskStats) -> Self {
-        MonitorData::Disk(value)
-    }
-}

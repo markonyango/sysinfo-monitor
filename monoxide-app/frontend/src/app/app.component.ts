@@ -1,11 +1,11 @@
-import { Component, computed, inject, Injectable } from '@angular/core';
+import { Component, inject, Injectable } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 
 import { invoke, InvokeArgs, InvokeOptions } from '@tauri-apps/api/core';
 
-import { DecimalPipe, JsonPipe, NgFor } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { ProcessListComponent } from './process-list.component';
 import { InformationService } from './information.service';
 import { DiskStatsListComponent } from './disk_stats_list.component';
@@ -42,8 +42,8 @@ export class TauriService {
     NetworkInterfacesListComponent,
     MatIconModule,
     MatTabsModule,
-    DockerStatsComponent
-],
+    DockerStatsComponent,
+  ],
 })
 export class AppComponent {
   private informationService = inject(InformationService);

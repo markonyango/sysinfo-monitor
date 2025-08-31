@@ -1,10 +1,12 @@
-import { Component, effect, input, signal } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import { GridOptions, GridApi } from 'ag-grid-community';
 import { Process } from './types';
 import { formatNumber, formatPercent } from '@angular/common';
 import { debounceTime, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActionsCellRendererComponent } from './components/actions.renderer';
+import { ActionIconComponent } from './components/action-icon.component';
 
 @Component({
   standalone: true,
@@ -23,7 +25,7 @@ export class ProcessListComponent {
   private gridApi = signal<GridApi | undefined>(undefined);
 
   public data = input.required<Process[]>();
-  
+
   public gridOptions = signal<GridOptions>({
     columnDefs: [
       {
@@ -76,6 +78,26 @@ export class ProcessListComponent {
           return `${hours}h ${minutes}m ${remainingSeconds}s`;
         },
       },
+      {
+        headerName: 'Actions',
+        pinned: 'right',
+        suppressMovable: true,
+        cellRenderer: ActionsCellRendererComponent,
+        cellRendererParams: {
+          components: [
+            {
+              component: ActionIconComponent,
+              action: (params: unknown) => alert(params?.toString()),
+              icon: 'info'
+            },
+            {
+              component: ActionIconComponent,
+              action: (params: unknown) => console.log(params),
+              icon: 'delete'
+            }
+          ]
+        }
+      }
     ],
     onGridReady: (event) => {
       event.api.sizeColumnsToFit();

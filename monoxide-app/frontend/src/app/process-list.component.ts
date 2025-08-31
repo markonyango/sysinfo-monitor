@@ -55,16 +55,16 @@ export class ProcessListComponent {
         valueFormatter: (params) =>
           `${formatNumber(params.data?.memory / 1024 / 1024, 'en-EN')} MB`,
       },
-      // {
-      //   field: 'disk_usage',
-      //   headerName: 'Disk',
-      //   valueFormatter: (params) => {
-      //     const read = params.data.disk_usage[0] / 1024 / 1024;
-      //     const write = params.data.disk_usage[1] / 1024 / 1024;
+      {
+        field: 'disk_usage',
+        headerName: 'Disk',
+        valueFormatter: (params) => {
+          const read = params.data.disk_usage.read / 1024 / 1024;
+          const write = params.data.disk_usage.written / 1024 / 1024;
 
-      //     return `${formatNumber(read, 'en-EN')} / ${formatNumber(write, 'en-EN')} MB`;
-      //   },
-      // },
+          return `${formatNumber(read, 'en-EN')} / ${formatNumber(write, 'en-EN')} MB`;
+        },
+      },
       {
         field: 'run_time',
         headerName: 'Runtime',

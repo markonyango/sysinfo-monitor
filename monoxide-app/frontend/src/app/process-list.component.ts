@@ -36,8 +36,8 @@ export class ProcessListComponent {
         sortable: true,
         filter: 'agNumberColumnFilter',
       },
-      { field: 'status' },
-      { field: 'user_id' },
+      { field: 'status', sortable: true, filter: 'agTextColumnFilter' },
+      { field: 'user_id', headerName: 'User', sortable: true, filter: 'agTextColumnFilter' },
       {
         field: 'cpu_usage',
         headerName: 'CPU',
